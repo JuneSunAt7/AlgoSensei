@@ -15,7 +15,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(611, 681)
-        Form.setStyleSheet("background-color: rgba(35, 17, 55,190);\n"
+        Form.setStyleSheet("background-color: rgba(135, 217, 255,190);\n"
 "")
         self.textBrowser = QtWidgets.QTextBrowser(Form)
         self.textBrowser.setGeometry(QtCore.QRect(10, 620, 491, 51))
@@ -28,17 +28,18 @@ class Ui_Form(object):
         self.textBrowser.setObjectName("textBrowser")
         self.pushButton = QtWidgets.QPushButton(Form)
         self.pushButton.setGeometry(QtCore.QRect(510, 627, 93, 41))
-        self.pushButton.setStyleSheet("background-color: rgba(80, 137, 177, 160);\n"
+        self.pushButton.setStyleSheet("background-color: rgba(80, 177, 137, 160);\n"
 "border-radius:10px;\n"
 "font: 75 14pt \"Segoe UI\";")
         self.pushButton.setObjectName("pushButton")
-        self.textEdit = QtWidgets.QTextEdit(Form)
-        self.textEdit.setEnabled(False)
-        self.textEdit.setGeometry(QtCore.QRect(10, 20, 581, 591))
-        self.textEdit.setStyleSheet("background-color: rgba(51, 49, 122,150);\n"
-"border-radius:15px;")
-        self.textEdit.setReadOnly(True)
-        self.textEdit.setObjectName("textEdit")
+        self.listWidget = QtWidgets.QListWidget(Form)
+        self.listWidget.setGeometry(QtCore.QRect(10, 10, 591, 601))
+        self.listWidget.setStyleSheet("background-color: rgba(51, 49, 122,150);\n"
+"border-radius:15px;\n"
+"font: 63 15pt \"Segoe UI Semibold\";\n"
+"border-radius:15px;\n"
+"color: rgb(221, 221, 221);")
+        self.listWidget.setObjectName("listWidget")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -47,8 +48,3 @@ class Ui_Form(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.pushButton.setText(_translate("Form", "Ask"))
-        self.textEdit.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
