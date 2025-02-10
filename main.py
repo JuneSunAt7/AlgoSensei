@@ -1,49 +1,78 @@
 import sys
-from PyQt5 import QtWidgets, QtCore
+from openai import OpenAI
+import requests
 import markdown
-import time
-import widget, ai_setup
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTextEdit, QLineEdit, QPushButton, QWidget
 
 
-class SenseiApp(QtWidgets.QWidget, widget.Ui_Form):
+class ChatApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setupUi(self)
-        self.pushButton.clicked.connect(self.add_msg)
-
-    def add_msg(self):
-        try:
-            user_input = self.textBrowser.toPlainText().strip()
-            if not user_input:
-                return
-            item = QtWidgets.QListWidgetItem()
-            item.setTextAlignment(QtCore.Qt.AlignRight)
-            item.setText(f" (U):\n{user_input}")
-            self.listWidget.addItem(item)
-            time.sleep(2)
+        self.setWindowTitle("Programmer's Assistant")
+        self.setGeometry(100, 100, 600, 400)
 
 
-            markdown_answ = ai_setup.ai_question(user_input)
-            # html_string = markdown.markdown(markdown_answ)
+        self.init_ui()
+
+    def init_ui(self):
+        central_widget = QWidget(self)
+        self.setCentralWidget(central_widget)
+
+        layout = QVBoxLayout()
+
+        self.chat_display = QTextEdit(self)
+        self.chat_display.setReadOnly(True)
+        layout.addWidget(self.chat_display)
+
+        self.input_field = QLineEdit(self)
+        self.input_field.setPlaceholderText("Enter your programming question here...")
+        layout.addWidget(self.input_field)
+
+        send_button = QPushButton("Send", self)
+        send_button.clicked.connect(self.send_message)
+        layout.addWidget(send_button)
+
+        central_widget.setLayout(layout)
+
+    def send_message(self):
+
+        user_input = self.input_field.text().strip()
+        if not user_input:
+            return
+
+        self.chat_display.append(f"You: {user_input}")
+
+        self.input_field.clear()
+
+        response = self.get_qwen_response(user_input)
+
+        html_response = markdown.markdown(response)
+        self.chat_display.append(f"Qwen: {html_response}")
+
+    def get_qwen_response(self, prompt):
+        client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key="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",
+        )
+
+        completion = client.chat.completions.create(
+            extra_headers={
+                "HTTP-Referer": "<YOUR_SITE_URL>",
+                "X-Title": "<YOUR_SITE_NAME>",
+            },
+            model="qwen/qwen-plus",
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        )
+        return completion.choices[0].message.content
 
 
-            answ_item = QtWidgets.QListWidgetItem()
-            item.setTextAlignment(QtCore.Qt.AlignLeft)
-            answ_item.setText(f"QWEN: \n{markdown_answ}")
-            self.listWidget.addItem(answ_item)
-
-            self.textBrowser.clear()
-        except Exception as e:
-            print(f"Error occurred: {e}")
-def main():
-    app = QtWidgets.QApplication(sys.argv)
-    window = SenseiApp()
-    window.show()
-    window.setWindowOpacity(0.8)
-    window.setWindowTitle("AlgoSensei")
-    window.setFixedSize(611, 681)
-    app.exec_()
-
-
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    chat_app = ChatApp()
+    chat_app.show()
+    sys.exit(app.exec_())
